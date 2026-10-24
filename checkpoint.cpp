@@ -1,24 +1,29 @@
-#include <string>
-#include <stdexcept>
+#include "checkpoint.h"
 #include <fstream>
+#include <iostream>
 
-class CheckpointHandler {
-public:
-    static void saveCheckpoint(int step, const std::string& filename) {
-        std::ofstream outfile(filename, std::ios::binary);
-        if (!outfile.is_open()) {
-            throw std::runtime_error("Failed to open checkpoint file for writing.");
+namespace fah::checkpoint {
+
+    bool saveCheckpoint(int step, const std::string& filename) {
+        std::ofstream file(filename, std::ios::binary);
+        if (!file.is_open()) {
+            std::cerr << "[Checkpoint] Kunne ikke åbne fil til lagring: " << filename << "\n";
+            return false;
         }
-        outfile.write(reinterpret_cast<const char*>(&step), sizeof(step));
+        file.write(reinterpret_cast<const char*>(&step), sizeof(step));
+        std::cout << "[Checkpoint] Status gemt succesfuldt for trin: " << step << "\n";
+        return true;
     }
 
-    static int loadCheckpoint(const std::string& filename) {
-        std::ifstream infile(filename, std::ios::binary);
-        if (!infile.is_open()) {
-            throw std::runtime_error("Failed to open checkpoint file for reading.");
+    bool loadCheckpoint(int& step, const std::string& filename) {
+        std::ifstream file(filename, std::ios::binary);
+        if (!file.is_open()) {
+            std::cout << "[Checkpoint] Ingen tidligere checkpoint-fil fundet. Starter fra trin 0.\n";
+            step = 0;
+            return false;
         }
-        int step = 0;
-        infile.read(reinterpret_cast<char*>(&step), sizeof(step));
-        return step;
+        file.read(reinterpret_cast<char*>(&step), sizeof(step));
+        std::cout << "[Checkpoint] Checkpoint indlæst! Genoptager fra trin: " << step << "\n";
+        return true;
     }
-};
+}
