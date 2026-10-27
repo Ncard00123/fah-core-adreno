@@ -1,10 +1,12 @@
 #include <iostream>
 #include <string>
+#include <windows.h>
 #include "gpu_adreno.h"
 #include "openmm_fah.h"
 #include "checkpoint.h"
 
 int main(int argc, char* argv[]) {
+    SetConsoleOutputCP(CP_UTF8);
     std::cout << "========================================\n";
     std::cout << "   FAH Adreno ARM64 Core Bridge        \n";
     std::cout << "========================================\n";
