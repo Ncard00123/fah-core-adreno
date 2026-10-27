@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Enable MSVC ARM64
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    add_compile_options(/W4 /WX-)
+    add_compile_options(/W4 /WX- /utf-8)
     add_definitions(-DFAH_PLATFORM_WINDOWS)
 else()
     message(FATAL_ERROR "Unsupported compiler for ARM64")
